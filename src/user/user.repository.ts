@@ -1,5 +1,6 @@
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { Repository, EntityRepository } from 'typeorm';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt'
 import { User } from './user.entity';
 import { UserSchema } from './shema/user.schema';
 
@@ -9,14 +10,17 @@ export class UserRepository extends Repository<User> {
         userRegister: UserSchema,
     ): Promise<User> {
         const { name, username, password } = userRegister;
+        const findUsername = await this.findOne({username});
+        if(findUsername){
+            throw new BadRequestException(`username ${username} already exist`);
+        }
         const user = new User;
         user.name = name;
         user.username = username;
-        user.password = await bcrypt.hash(password, 10, function(err, hash) {
-            if(err) throw err;
-            return hash;
-        });;
-        await user.save();
+        user.password = bcrypt.hashSync(password, 10);
+        if(!findUsername){
+            await user.save();
+        }
         return user;
     }
 

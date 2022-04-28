@@ -4,12 +4,12 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { ProductModule } from './product/product.module';
-import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     ProductModule,
+    UserModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -21,7 +21,7 @@ import { UserService } from './user/user.service';
       synchronize: true,
     }),
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  controllers: [AppController, ],
+  providers: [AppService],
 })
 export class AppModule {}
