@@ -2,10 +2,14 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { UserRepository } from '../user/user.repository';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-    constructor(private userRepository : UserRepository){}
+    constructor(
+        private userRepository : UserRepository,
+        private jwtService: JwtService
+    ){}
 
     async validateUser(username: string, password: string): Promise<any> {
         const user = await this.userRepository.findOne({ username });
@@ -19,10 +23,15 @@ export class AuthService {
         return null;
     }
 
-    async login(username: string, password: string): Promise<any> {
-        const user = await this.validateUser(username, password);
-        if(!user){
-            throw new UnauthorizedException('usernam or password incorrect');
-        }
-    }
+    async login(user: any) {
+        const payload = { 
+            id: user.id,
+            name: user.name,
+            username: user.username,
+        };
+        return {
+            ...payload,
+            access_token: this.jwtService.sign(payload),
+        };
+      }
 }
