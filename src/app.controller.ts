@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
+import { s3 } from './aws/s3';
 
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
@@ -30,5 +31,18 @@ export class AppController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Get('/files')
+  public async getListFile() {
+    const params = {
+      // Body: "hello kiss", 
+      Bucket: "dongngo-test", 
+      // Key: "hello.txt"
+      MaxKeys: 1,
+    };
+    let data = {}
+    data = await s3.listObjects(params).promise();
+    return data;
   }
 }
