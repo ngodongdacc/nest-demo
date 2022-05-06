@@ -1,6 +1,6 @@
-import { IsString, MinLength, MaxLength, Matches, IsNumber, IsArray, IsObject } from 'class-validator';
+import { IsString, MinLength, MaxLength, Matches, IsNumber, IsArray, IsObject, IsEmpty } from 'class-validator';
 
-export class UserSchema {
+export class FileSchema {
   @IsString()
   @MinLength(1, {
     message: 'Key is required',
@@ -20,8 +20,8 @@ export class UserSchema {
   @IsString()
   ETag: string;
   
-  @IsArray()
-  ChecksumAlgorithm: object;
+  // @IsArray()
+  // ChecksumAlgorithm: object;
   
   @IsString()
   StorageClass: string;

@@ -33,16 +33,16 @@ export class AppController {
     return req.user;
   }
 
-  @Get('/files')
-  public async getListFile() {
-    const params = {
-      // Body: "hello kiss", 
-      Bucket: "dongngo-test", 
-      // Key: "hello.txt"
-      MaxKeys: 1,
-    };
-    let data = {}
-    data = await s3.listObjects(params).promise();
-    return data;
-  }
+  // @Get('/files')
+  // public async getListFile() {
+  //   const params = {
+  //     // Body: "hello kiss", 
+  //     Bucket: "dongngo-test", 
+  //     // Key: "hello.txt"
+  //     MaxKeys: 1,
+  //   };
+  //   let data = {}
+  //   data = await s3.listObjects(params).promise();
+  //   return data;
+  // }
 }

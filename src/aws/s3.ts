@@ -1,7 +1,7 @@
-var AWS = require('aws-sdk');
-
-// Set the region 
-AWS.config.update({region: 'us-west-2'});
-
-// Create S3 service object
-export const s3 = new AWS.S3({apiVersion: '2006-03-01'});
+// Create service client module using ES6 syntax.
+import { S3Client } from "@aws-sdk/client-s3";
+// Set the AWS Region.
+const REGION = "ap-southeast-1"; //e.g. "us-east-1"
+// Create an Amazon S3 service client object.
+const s3 = new S3Client({ region: REGION });
+export { s3 };
