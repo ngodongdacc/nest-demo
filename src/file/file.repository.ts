@@ -1,10 +1,12 @@
 import { NotFoundException, BadRequestException, UploadedFile } from '@nestjs/common';
 import { Repository, EntityRepository } from 'typeorm';
 import * as path from 'path';
+import * as http from 'http';
 import { ListObjectsCommand, PutObjectCommand,GetObjectCommand } from "@aws-sdk/client-s3";
 
-import { s3 } from '../aws/s3';
-import { VarGloblalS3 } from '../aws/const';
+import { s3Client } from '../aws/s3Client';
+import { S3 } from '../aws/s3';
+import { Var_globlal_AWS } from '../aws/const';
 
 import { File } from './file.entity';
 
@@ -26,11 +28,11 @@ export class FileRepository extends Repository<File> {
 
         const bucketParams = {
             Marker: param.keyPrev,
-            Bucket: VarGloblalS3.bucket,
+            Bucket: Var_globlal_AWS.bucket,
             MaxKeys: +param.limit || 10,
         };
 
-        const data = await s3.send(new ListObjectsCommand(bucketParams));
+        const data = await s3Client.send(new ListObjectsCommand(bucketParams));
         if(data && data.Contents){
             respose.data = data.Contents;
         }
@@ -42,12 +44,12 @@ export class FileRepository extends Repository<File> {
         @UploadedFile() file: Express.Multer.File
     ): Promise<any> {
         const uploadParams  = {
-            Bucket: VarGloblalS3.bucket,
+            Bucket: Var_globlal_AWS.bucket,
             Key: file.originalname,// path.basename(file),
             Body: file.buffer,
         };
 
-        const data = await s3.send(new PutObjectCommand(uploadParams));
+        const data = await s3Client.send(new PutObjectCommand(uploadParams));
         // if(data && data.Contents){
         //     respose.data = data.Contents;
         // }
@@ -56,11 +58,13 @@ export class FileRepository extends Repository<File> {
     }
 
     public async getFile(
-        key: string
+        param: {
+            Key: string
+        }
     ): Promise<any> {
         const bucketParams = {
-            Bucket: VarGloblalS3.bucket,
-            Key: key,
+            Bucket: Var_globlal_AWS.bucket,
+            ...param,
         };
         
         const streamToString = (stream) =>
@@ -72,10 +76,12 @@ export class FileRepository extends Repository<File> {
         });
   
         // Get the object} from the Amazon S3 bucket. It is returned as a ReadableStream.
-        const data = await s3.send(new GetObjectCommand(bucketParams));
+        const data = await (await s3Client.send(new GetObjectCommand(bucketParams))).Body;
         // return data; // For unit tests.
         // Convert the ReadableStream to a string.
-        const bodyContents = await streamToString(data.Body);
+        const bodyContents = await streamToString(data);
+
+        // const data = await S3.getObject(bucketParams).createReadStream();;
         return bodyContents;
     }
 }

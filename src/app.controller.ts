@@ -3,7 +3,8 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
-import { s3 } from './aws/s3';
+import { s3Client } from './aws/s3Client';
+import { SQS } from './aws/sqs/sqs_message';
 
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
@@ -31,6 +32,13 @@ export class AppController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Get('message')
+  sendMessage(@Request() req) {
+    const sqs = new SQS();
+    sqs.sendMessage('Hello word');
+    return 'ok';
   }
 
   // @Get('/files')

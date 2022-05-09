@@ -29,7 +29,7 @@ export class FileService {
     public async getFileDetail(
         key: string
     ): Promise<any> {
-        return await this.fileRepository.getFile(key);
+        return await this.fileRepository.getFile({ Key: key });
     }
 
 }

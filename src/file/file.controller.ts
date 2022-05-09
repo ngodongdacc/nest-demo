@@ -1,6 +1,6 @@
 import { Controller, Get, Query, UploadedFile,Post, UseInterceptors, Param,Res,Response, StreamableFile } from '@nestjs/common';
 import { FileInterceptor,  } from '@nestjs/platform-express';
-import { createReadStream, ReadStream } from 'fs';
+import { createReadStream, ReadStream, writeFile } from 'fs';
 import { Duplex, Readable } from 'stream';
 import * as streamBuffers from 'stream-buffers';
 import { join } from 'path';
@@ -15,7 +15,7 @@ export class FileController {
     constructor( private fileService : FileService ) {}
     @Get('/list')
     public async getListFile(
-        @Query() params 
+        @Query() params
     ): Promise<ResponseData> {
         return await this.fileService.getList(params);
     }
@@ -23,7 +23,7 @@ export class FileController {
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
     public async uploadFile(
-        @UploadedFile() file: Express.Multer.File 
+        @UploadedFile() file: Express.Multer.File
     ): Promise<ResponseData> {
         return await this.fileService.uploadFile(file);
     }
@@ -32,37 +32,25 @@ export class FileController {
     public async getFile(
         @Query() params: { file: string },
         @Response({ passthrough: true }) res): Promise<any> {
+        // res.set({
+        //     'Content-Type': 'application/pdf',
+        //     'Content-Disposition': 'attachment; filename=quote.pdf',
+        // });
         const data  = await this.fileService.getFileDetail(params.file);
-        // console.log('data:: ', data);
-        
-        // const staf = statSync(data);
-        // console.log('staf;: ', staf.size);
-        
-        const file = Buffer.from(data);
-        // console.log('file:: ', file);
-        
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; filename=quote.pdf',
-          });
-
-        function bufferToStream(buffer) { 
-            var stream = new Readable();
-            stream.push(buffer);
-            stream.push(null);
-            
-            return stream;
-        }
-        const files = bufferToStream(file);
-        files.pipe(res);
-        // var myReadableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
-        // frequency: 10,      // in milliseconds.
-        // chunkSize: 2048     // in bytes.
-        // }); 
-        
-        // // With a buffer
-        // myReadableStreamBuffer.put(data);
-        console.log('files:: ', files);
-        return files;
+        // writeFile('file.pdf', data, function (err) {
+        //     if (err) throw err;
+        //     console.log('Saved!');
+        // });
+        // const file = Buffer.from(data);
+        // function bufferToStream(buffer) {
+        //     var stream = new Readable();
+        //     stream.push(buffer);
+        //     stream.push(null);
+        //     return stream;
+        // }
+        // const files = bufferToStream(data);
+        res.attachment(params.file);
+        // data.pipe(res);
+        return data;
     }
 }
