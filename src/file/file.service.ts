@@ -26,10 +26,10 @@ export class FileService {
         return await this.fileRepository.upload(file);
     }
 
-    public async getFileDetail(
+    public async urlFileDetail(
         key: string
-    ): Promise<any> {
-        return await this.fileRepository.getFile({ Key: key });
+    ): Promise<string> {
+        return await this.fileRepository.getUrlFile({ Key: key });
     }
 
 }

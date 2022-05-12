@@ -1,6 +1,9 @@
 import { Controller, Get, Query, UploadedFile,Post, UseInterceptors, Param,Res,Response, StreamableFile } from '@nestjs/common';
 import { FileInterceptor,  } from '@nestjs/platform-express';
-import { createReadStream, ReadStream, writeFile } from 'fs';
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from '../aws/s3Client';
+
+import { createReadStream, ReadStream, writeFile, createWriteStream } from 'fs';
 import { Duplex, Readable } from 'stream';
 import * as streamBuffers from 'stream-buffers';
 import { join } from 'path';
@@ -9,6 +12,7 @@ import { GetListFile } from './schema/getListFile.schema';
 
 import { ResponseData } from '../base/responseData.entity.base';
 import { FileService } from './file.service';
+import { Var_globlal_AWS } from '../aws/const';
 
 @Controller('file')
 export class FileController {
@@ -28,29 +32,11 @@ export class FileController {
         return await this.fileService.uploadFile(file);
     }
 
-    @Get('/detail')
+    @Get('/download')
     public async getFile(
         @Query() params: { file: string },
-        @Response({ passthrough: true }) res): Promise<any> {
-        // res.set({
-        //     'Content-Type': 'application/pdf',
-        //     'Content-Disposition': 'attachment; filename=quote.pdf',
-        // });
-        const data  = await this.fileService.getFileDetail(params.file);
-        // writeFile('file.pdf', data, function (err) {
-        //     if (err) throw err;
-        //     console.log('Saved!');
-        // });
-        // const file = Buffer.from(data);
-        // function bufferToStream(buffer) {
-        //     var stream = new Readable();
-        //     stream.push(buffer);
-        //     stream.push(null);
-        //     return stream;
-        // }
-        // const files = bufferToStream(data);
-        res.attachment(params.file);
-        // data.pipe(res);
-        return data;
+        @Response({ passthrough: true }) res): Promise<string> {
+        const signedUrl = this.fileService.urlFileDetail(params.file)
+        return signedUrl;
     }
 }
