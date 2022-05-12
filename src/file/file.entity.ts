@@ -3,7 +3,7 @@ import { PrimaryGeneratedColumn, BaseEntity, Column, Entity } from 'typeorm';
 @Entity()
 export class File extends BaseEntity {
   @PrimaryGeneratedColumn()
-  name: string;
+  id: string;
 
   @Column()
   LastModified: string;
