@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SqsModule, SqsConfig, } from '@nestjs-packages/sqs';
+import { SqsConsumer } from './aws/sqs/sqs.service';
 
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
@@ -37,6 +40,6 @@ import { FileController } from './file/file.controller';
     FileModule,
   ],
   controllers: [AppController,  ],
-  providers: [AppService],
+  providers: [AppService, ConfigService],
 })
 export class AppModule {}

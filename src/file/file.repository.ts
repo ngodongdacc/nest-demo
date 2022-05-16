@@ -1,7 +1,7 @@
 import { NotFoundException, BadRequestException, UploadedFile } from '@nestjs/common';
 import { Repository, EntityRepository } from 'typeorm';
-import * as path from 'path';
-import * as http from 'http';
+import * as fs from 'fs';
+import * as https from 'https';
 import { ListObjectsCommand, PutObjectCommand,GetObjectCommand } from "@aws-sdk/client-s3";
 
 import { s3Client } from '../aws/s3Client';
@@ -108,5 +108,39 @@ export class FileRepository extends Repository<File> {
         };
         const urlFile = await s3.getSignedUrl('getObject', bucketParams);
         return urlFile;
+    }
+
+    async dowloadFile(
+       files: {
+           fileName: string,
+           url: string,
+       }
+    ): Promise<string> {
+        const request = https.get(files.url, function(response) {
+            var data = '';
+            response.on('data', function (chunk) {
+                data += chunk;
+            });
+            response.on('end', function () {
+                console.log('data::', data);
+            });
+        });
+        request.on('error', function (e) {
+            console.log(e.message);
+        });
+        request.end();
+        return 'ok';
+    }
+
+    async uploadFile(
+        param: {
+            Key: string
+        }
+    ) {
+        const urlFile = await this.getUrlFile(param);
+        this.dowloadFile({
+            fileName: param.Key,
+            url: urlFile
+        })
     }
 }

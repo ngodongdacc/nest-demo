@@ -2,6 +2,7 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserSchema } from './shema/user.schema';
 import { User } from './user.entity';
+import { UserInter } from './user.interface';
 
 @Controller('user')
 export class UserController {
