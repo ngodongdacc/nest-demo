@@ -9,7 +9,7 @@ export class UserSchema {
     message: 'username is too long, max 255 char',
   })
   username: string;
-  
+
   @MaxLength(255, {
     message: 'name is too long, max 255 char',
   })

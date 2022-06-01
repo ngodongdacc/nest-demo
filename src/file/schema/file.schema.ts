@@ -1,4 +1,13 @@
-import { IsString, MinLength, MaxLength, Matches, IsNumber, IsArray, IsObject, IsEmpty } from 'class-validator';
+import {
+  IsString,
+  MinLength,
+  MaxLength,
+  Matches,
+  IsNumber,
+  IsArray,
+  IsObject,
+  IsEmpty,
+} from 'class-validator';
 
 export class FileSchema {
   @IsString()
@@ -9,20 +18,19 @@ export class FileSchema {
     message: 'Key is too long, max 255 char',
   })
   Key: string;
-  
+
   @MaxLength(255, {
     message: 'name is too long, max 255 char',
   })
-  
   @IsString()
   LastModified: string;
 
   @IsString()
   ETag: string;
-  
+
   // @IsArray()
   // ChecksumAlgorithm: object;
-  
+
   @IsString()
   StorageClass: string;
 

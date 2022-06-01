@@ -1,14 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { cpus } from 'os';
+// import { sqsService } from './aws/sqs/sqs.service';
+// import { sqsService } from './aws/sqs/sqs.service';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import * as dotenv from 'dotenv';
 
 async function bootstrap() {
-  // console.log('cpus:: ', cpus().length);
-  // console.log('cpus thead:: ', cpus());
-  
   const app = await NestFactory.create(AppModule);
+  // const sqsService =  SqsService;
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(4000);
 }
 bootstrap();

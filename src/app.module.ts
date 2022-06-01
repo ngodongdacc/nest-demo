@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SqsModule, SqsConfig, } from '@nestjs-packages/sqs';
-import { SqsConsumer } from './aws/sqs/sqs.service';
+import { SqsModule, SqsConfig } from '@nestjs-packages/sqs';
 
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
+import { ConsumerModule } from './consumer/consumer.module';
 
 import { AppController } from './app.controller';
 
@@ -20,9 +20,14 @@ import { User } from './user/user.entity';
 import { File } from './file/file.entity';
 
 import { FileController } from './file/file.controller';
-
+import configuration from './config/configuration';
+// import { config } from './config';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -38,8 +43,9 @@ import { FileController } from './file/file.controller';
     UserModule,
     AuthModule,
     FileModule,
+    ConsumerModule,
   ],
-  controllers: [AppController,  ],
+  controllers: [AppController],
   providers: [AppService, ConfigService],
 })
 export class AppModule {}

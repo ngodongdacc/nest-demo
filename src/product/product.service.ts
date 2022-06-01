@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException,  } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './product.entity';
 import { CreateProductDTO } from './dto/create-product.dto';
@@ -29,7 +29,6 @@ export class ProductService {
     return foundProduct;
   }
 
-
   public async editProduct(
     productId: number,
     createProductDto: CreateProductDTO,
@@ -40,7 +39,6 @@ export class ProductService {
     }
     return this.productRepository.editProduct(createProductDto, editedProduct);
   }
-
 
   public async deleteProduct(productId: number): Promise<void> {
     await this.productRepository.delete(productId);

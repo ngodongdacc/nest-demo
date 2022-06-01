@@ -10,10 +10,10 @@ export class File extends BaseEntity {
 
   @Column()
   ETag: string;
-  
+
   // @Column()
   // ChecksumAlgorithm: object;
-  
+
   @Column()
   StorageClass: string;
 

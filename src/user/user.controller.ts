@@ -6,12 +6,10 @@ import { UserInter } from './user.interface';
 
 @Controller('user')
 export class UserController {
-    constructor(private userService: UserService) {}
+  constructor(private userService: UserService) {}
 
-    @Post('create')
-    public async registerHandler(
-        @Body() user: UserSchema
-    ): Promise<User> {
-        return await this.userService.registerUser(user);
-    }
+  @Post('create')
+  public async registerHandler(@Body() user: UserSchema): Promise<User> {
+    return await this.userService.registerUser(user);
+  }
 }

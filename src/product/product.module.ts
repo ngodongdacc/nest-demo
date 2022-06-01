@@ -9,5 +9,4 @@ import { ProductRepository } from './product.repository';
   controllers: [ProductController],
   providers: [ProductService],
 })
-
 export class ProductModule {}

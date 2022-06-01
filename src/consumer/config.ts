@@ -1,4 +1,4 @@
-export const Var_globlal_AWS = {
+export const config = {
   bucket: 'dongngo-test',
   region: 'ap-southeast-1',
   QueueUrl: 'https://sqs.ap-southeast-1.amazonaws.com/578895866360/CMC-message',

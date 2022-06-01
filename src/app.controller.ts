@@ -1,4 +1,4 @@
-import { Controller,Request, Get, Post, UseGuards  } from '@nestjs/common';
+import { Controller, Request, Get, Post, UseGuards, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AppService } from './app.service';
@@ -40,12 +40,19 @@ export class AppController {
     sqs.sendMessage('Hello word');
     return 'ok';
   }
+  @Post('test')
+  test(@Request() req) {
+    console.log('req:: ', req.body);
+    return {
+      data: []
+    };
+  }
 
   // @Get('/files')
   // public async getListFile() {
   //   const params = {
-  //     // Body: "hello kiss", 
-  //     Bucket: "dongngo-test", 
+  //     // Body: "hello kiss",
+  //     Bucket: "dongngo-test",
   //     // Key: "hello.txt"
   //     MaxKeys: 1,
   //   };

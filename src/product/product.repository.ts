@@ -4,7 +4,6 @@ import { CreateProductDTO } from './dto/create-product.dto';
 
 @EntityRepository(Product)
 export class ProductRepository extends Repository<Product> {
-
   public async createProduct(
     createProductDto: CreateProductDTO,
   ): Promise<Product> {

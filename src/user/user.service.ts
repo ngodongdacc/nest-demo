@@ -8,21 +8,19 @@ import { UserInter } from './user.interface';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectRepository(UserRepository)
-        private userRepository: UserRepository,
-        ) {}
-    
-    private readonly users: UserInter[] = [];
+  constructor(
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
+  ) {}
 
-    public async registerUser(
-        user: UserSchema
-    ): Promise<User> {
-        return await this.userRepository.register(user);
-    }
+  private readonly users: UserInter[] = [];
 
-    findAll(): UserInter[] {
-        return this.users;
-        // return await this.userRepository.register(user);
-    }
+  public async registerUser(user: UserSchema): Promise<User> {
+    return await this.userRepository.register(user);
+  }
+
+  findAll(): UserInter[] {
+    return this.users;
+    // return await this.userRepository.register(user);
+  }
 }

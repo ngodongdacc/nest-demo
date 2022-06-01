@@ -2,47 +2,43 @@ import { Consumer } from 'sqs-consumer';
 import { Var_globlal_AWS } from '../const';
 import * as AWS from 'aws-sdk';
 import { FileRepository } from '../../file/file.repository';
+import { ConfigService } from '@nestjs/config';
+import configuration from '../../config/configuration';
 
 AWS.config.update({
-  region: Var_globlal_AWS.region,
-  accessKeyId:  'AKIAYNSHB5H4JFEIKGFS',
-  secretAccessKey: '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'
-})
+  region: Var_globlal_AWS.region, // process.env.REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
 const fileRepository = new FileRepository();
-const tesst = () =>{
-  const app = Consumer.create({
-    queueUrl: Var_globlal_AWS.QueueUrl,
-    handleMessage: async (message) => {
-    //  const urlFile = await fileRepository.getUrlFile()
-      if(message && message.Body) {
-        const body = JSON.parse(message.Body);
-        const Key = body.Records[0].s3.object.key;
-        if(Key){
-          await fileRepository.uploadFile({ Key });
+
+export class SqsService {
+  constructor() {}
+  start() {
+    const sqsService = Consumer.create({
+      queueUrl: Var_globlal_AWS.QueueUrl,
+      handleMessage: async (message) => {
+        if (message && message.Body) {
+          const body = JSON.parse(message.Body);
+          const Key = body.Records[0].s3.object.key;
+          if (Key) {
+            await fileRepository.uploadFile({ Key });
+          }
         }
-      }
-        
-      // ...
-    },
-    sqs: new AWS.SQS()
-  });
-  
-   app.on('error', (err) => {
-    console.error(err.message);
-  });
-  
-  app.on('processing_error', (err) => {
-    console.error(err.message);
-  });
-  
-  app.on('timeout_error', (err) => {
-   console.error(err.message);
-  });
-}
+      },
+      sqs: new AWS.SQS(),
+    });
+    sqsService.on('error', (err) => {
+      console.error(err.message);
+    });
 
-export class SqsConsumer {
-  public start(options: {}) {
-    return 0;
-  };
-}
+    sqsService.on('processing_error', (err) => {
+      console.error(err.message);
+    });
 
+    sqsService.on('timeout_error', (err) => {
+      console.error(err.message);
+    });
+  }
+}
