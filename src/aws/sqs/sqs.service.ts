@@ -1,7 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import * as SQS from 'aws-sdk/clients/sqs';
 import { SQSMessage } from 'sqs-consumer';
-
 export class SqsService {
   sqs: any;
   queueUrl: string;
