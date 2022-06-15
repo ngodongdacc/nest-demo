@@ -8,7 +8,7 @@ import { UserSchema } from './shema/user.schema';
 export class UserRepository extends Repository<User> {
   public async register(userRegister: UserSchema): Promise<User> {
     const { name, username, password } = userRegister;
-    const findUsername = await this.findOne({ username });
+    const findUsername = await this.findOne({ where: { username } });
     if (findUsername) {
       throw new BadRequestException(`username ${username} already exist`);
     }
@@ -24,7 +24,7 @@ export class UserRepository extends Repository<User> {
 
   public async login(userRegister: UserSchema): Promise<User> {
     const { name, username, password } = userRegister;
-    const findUsername = await this.findOne({ username });
+    const findUsername = await this.findOne({ where: { username } });
     if (findUsername) {
       throw new BadRequestException(`username ${username} already exist`);
     }

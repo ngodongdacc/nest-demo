@@ -4,4 +4,6 @@ export default () => ({
     host: process.env.DATABASE_HOST,
     port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
   },
+  pathSaveFile: process.env.PATH_SAVE_FILE,
+  ENV: process.env.ENV || 'TIMEZONE INTERGRATION',
 });

@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as SQS from 'aws-sdk/clients/sqs';
 import { SQSMessage } from 'sqs-consumer';
 
-export class SqsService {
-  sqs: any;
+@Injectable()
+export class SqsConsumerService {
+  sqs: SQS;
   queueUrl: string;
   constructor(private readonly configService: ConfigService) {
     this.sqs = new SQS({
@@ -17,14 +19,15 @@ export class SqsService {
   }
 
   async deleteMessageBatch(messages: SQSMessage[]): Promise<void> {
+    const deleteParams = {
+      QueueUrl: this.queueUrl,
+      Entries: messages.map((message) => ({
+        Id: message && message.MessageId,
+        ReceiptHandle: message.ReceiptHandle,
+      })),
+    };
+
     try {
-      const deleteParams = {
-        QueueUrl: this.queueUrl,
-        Entries: messages.map((message) => ({
-          Id: message && message.MessageId,
-          ReceiptHandle: message.ReceiptHandle,
-        })),
-      };
       await this.sqs.deleteMessageBatch(deleteParams).promise();
     } catch (err) {
       console.log('deleteMessageBatch:: ', err);

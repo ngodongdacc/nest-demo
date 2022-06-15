@@ -109,7 +109,7 @@ export class FileRepository extends Repository<File> {
 
   async dowloadFile(files: { fileName: string; url: string }): Promise<string> {
     const request = https.get(files.url, function (response) {
-      var data = '';
+      let data = '';
       response.on('data', function (chunk) {
         data += chunk;
       });
