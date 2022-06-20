@@ -1,10 +1,17 @@
-import { Controller, Request, Get, Post, UseGuards, Body } from '@nestjs/common';
+import {
+  Controller,
+  Request,
+  Get,
+  Post,
+  UseGuards,
+  Body,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { s3Client } from './aws/s3Client';
-import { SQS } from './aws/sqs/sqs_message';
+import { S3Service } from './aws/s3/s3.service';
 
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
@@ -36,15 +43,15 @@ export class AppController {
 
   @Get('message')
   sendMessage(@Request() req) {
-    const sqs = new SQS();
-    sqs.sendMessage('Hello word');
+    // const s3 = new S3Service();
+    // sqs.sendMessage('Hello word');
     return 'ok';
   }
   @Post('test')
   test(@Request() req) {
     console.log('req:: ', req.body);
     return {
-      data: []
+      data: [],
     };
   }
 

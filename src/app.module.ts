@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SqsModule, SqsConfig } from '@nestjs-packages/sqs';
 
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
@@ -13,37 +12,28 @@ import { ConsumerModule } from './consumer/consumer.module';
 import { AppController } from './app.controller';
 
 import { AppService } from './app.service';
-import { FileService } from './file/file.service';
 
 import { Product } from './product/product.entity';
 import { User } from './user/user.entity';
 import { File } from './file/file.entity';
 
-import { FileController } from './file/file.controller';
 import configuration from './config/configuration';
-// import { config } from './config';
+import configAws from './aws/config';
+import { DBModule } from './unit/db.moduler';
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: `${process.env.NODE_ENV}.env`,
       isGlobal: true,
-      load: [configuration],
+      load: [configuration, configAws],
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'Dong1234567890!',
-      database: 'test_db',
-      // entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-      entities: [Product, User, File],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(),
     ProductModule,
     UserModule,
     AuthModule,
     FileModule,
     ConsumerModule,
+    DBModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],
