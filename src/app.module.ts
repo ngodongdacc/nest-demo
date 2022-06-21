@@ -20,14 +20,15 @@ import { File } from './file/file.entity';
 import configuration from './config/configuration';
 import configAws from './aws/config';
 import { DBModule } from './unit/db.moduler';
+// import { DBModule } from './unit/db.moduler';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `${process.env.NODE_ENV}.env`,
+      // envFilePath: `${process.env.NODE_ENV}.env`,
       isGlobal: true,
       load: [configuration, configAws],
     }),
-    TypeOrmModule.forRoot(),
+    // TypeOrmModule.forRoot(),
     ProductModule,
     UserModule,
     AuthModule,
